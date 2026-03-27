@@ -4,13 +4,19 @@
 
 ## 新增 skill
 
-每個 skill 放在獨立子資料夾，資料夾名即 skill 名稱：
+每個 skill 放在 `skills/` 下的獨立子資料夾，資料夾名即 skill 名稱：
 
 ```
 my-claude-skills/
-└── skill-name/
-    └── SKILL.md
+└── skills/
+    └── skill-name/
+        └── SKILL.md
 ```
+
+> **Junction 說明：** Claude Code 實際讀取路徑為
+> `%USERPROFILE%\.claude\plugins\marketplaces\my-claude-skills\skills\`
+> 透過 Junction / symlink 連結到 `%USERPROFILE%\my-claude-skills`，兩者是同一個資料夾。
+> 路徑因電腦而異，另一個路徑僅供 git 管理用。
 
 新增後：
 
