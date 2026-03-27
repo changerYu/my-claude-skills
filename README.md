@@ -2,48 +2,73 @@
 
 我的個人 Claude Code skills 集合。
 
-## 安裝
+## 用途
+
+統一管理自訂的 Claude Code slash commands（skills），方便在不同電腦間同步使用。
+
+---
+
+## 在新電腦上安裝
 
 ```bash
-claude plugin install https://github.com/silve/my-claude-skills
+# 1. Clone repo
+git clone git@github.com:changerYu/my-claude-skills.git ~/my-claude-skills
+
+# 2. 建立 symlink 掛載到 Claude Code
+mkdir -p ~/.claude/plugins/marketplaces
+ln -s ~/my-claude-skills ~/.claude/plugins/marketplaces/my-claude-skills
 ```
 
-## 包含的 Skills
+然後在 `~/.claude/settings.json` 的 `extraKnownMarketplaces` 加入：
 
-| Skill | 說明 | 使用方式 |
-|-------|------|---------|
-| `example-skill` | 生成程式碼摘要 | `/example-skill src/index.ts` |
-
-## 新增 Skill
-
-在 `skills/` 下建立新資料夾，加入 `SKILL.md`：
-
-```
-skills/
-└── my-new-skill/
-    ├── SKILL.md        # 必要：skill 主體指令
-    └── templates/      # 選用：附帶模板或參考資料
+```json
+{
+  "extraKnownMarketplaces": {
+    "my-claude-skills": {
+      "source": {
+        "source": "directory",
+        "path": "~/.claude/plugins/marketplaces/my-claude-skills"
+      }
+    }
+  }
+}
 ```
 
-`SKILL.md` 最小格式：
+重啟 Claude Code 即生效。
+
+---
+
+## 新增 Skill 後同步
+
+```bash
+cd ~/my-claude-skills
+git add .
+git commit -m "add skill-name"
+git push
+```
+
+---
+
+## Skills 目錄
+
+每個 skill 放在獨立子資料夾，資料夾名即 skill 名稱：
+
+```
+my-claude-skills/
+└── skills/
+    └── my-new-skill/
+        └── SKILL.md
+```
+
+`SKILL.md` 基本格式：
 
 ```markdown
 ---
 name: my-new-skill
 description: 說明這個 skill 做什麼
-disable-model-invocation: true
 ---
 
 # 指令內容
 
 $ARGUMENTS
 ```
-
-## Skill 設定參考
-
-| Frontmatter | 效果 |
-|------------|------|
-| `disable-model-invocation: true` | 只有使用者可用 `/skill-name` 呼叫 |
-| `user-invocable: false` | 只有 Claude 自動觸發（背景知識） |
-| `context: fork` | 在獨立子 agent 中執行 |
-| `allowed-tools: Read, Grep` | 限制可用工具 |
